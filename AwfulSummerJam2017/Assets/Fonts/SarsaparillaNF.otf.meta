@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: b2872f87a2aca164fbd97207e1a2e191
+timeCreated: 1500315187
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Sarsaparilla NF
+  fontNames:
+  - Sarsaparilla NF
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
