@@ -9,10 +9,7 @@ public class NextLevelTransition : MonoBehaviour
     {
         if (col.tag == "Player")
         {
-
             Debug.Log("player crossed me, call level manager");
-
         }
-
     }
 }

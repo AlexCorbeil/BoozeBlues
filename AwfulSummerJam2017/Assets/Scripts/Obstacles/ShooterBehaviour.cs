@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class ShooterBehaviour : EnemyBehaviour {
 
-    public Transform gunBarrel; //Where the bullet will spawn from
+    public Transform gunBarrel;
 
     private Animator anim;
     private SFXManager sfxManager;
     [SerializeField]
     private GameObject bullet;
 
-    //Runs the standard Start function from EnemyBehaviour
-    //adds the animator and sfxManager for the shooter only
     protected override void Start()
     {
         base.Start();
@@ -20,7 +18,6 @@ public class ShooterBehaviour : EnemyBehaviour {
         sfxManager = GameObject.FindObjectOfType<SFXManager>();
     }
 
-    //Starts the Shoot animation and sfx, then spawns a bullet from the gunBarrel's location
     public void Shoot()
     {
         anim.SetTrigger("isShooting");
@@ -30,7 +27,6 @@ public class ShooterBehaviour : EnemyBehaviour {
         Destroy(shot, 3f);
     }
 
-    //Plays the shot sound effects, as it says on the tin.
     void ShotSFX()
     {
         sfxManager.audioSource[3].clip = sfxManager.shotSFX;

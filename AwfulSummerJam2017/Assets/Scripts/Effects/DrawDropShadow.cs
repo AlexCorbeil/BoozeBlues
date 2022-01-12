@@ -11,7 +11,6 @@ public class DrawDropShadow : MonoBehaviour
     int groundLayer;
     float rayDistance = 10;
 
-    // Use this for initialization
     void Start()
     {
         groundLayer = LayerMask.GetMask("Ground");
@@ -19,16 +18,11 @@ public class DrawDropShadow : MonoBehaviour
 
     public void UpdateShadowHeightAndScale()
     {
-
-
-
-        //        Debug.DrawRay(transform.parent.position, Vector2.down * 5, Color.red);
-
         RaycastHit2D hit = Physics2D.Raycast(transform.parent.position, Vector2.down, rayDistance, groundLayer);
         if (hit)
         {
             shadowOffsetY = hit.collider.bounds.max.y;
-            float scaleAmount = 30 / hit.distance; // yay magic numbers
+            float scaleAmount = 30 / hit.distance;
             transform.localScale = new Vector2(scaleAmount, scaleAmount);
         }
     }

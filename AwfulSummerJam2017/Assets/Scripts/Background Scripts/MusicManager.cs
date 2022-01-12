@@ -13,14 +13,11 @@ public class MusicManager : MonoBehaviour
     const string PLAYER_PREFS_VOLUME = "AWFULJAM_2017_BOOZE-BLUES_VOLUMEKEY";
 
 
-
-    // Use this for initialization
     void Awake()
     {
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
-            Debug.Log("Destroying extra music manager");
         }
 
 
@@ -33,7 +30,7 @@ public class MusicManager : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         audioSource.volume = GetVolume();
-        PlayMusicTrack(SceneManager.GetActiveScene().buildIndex); // only needed for testing so main menu has a song. can remove in final build
+        PlayMusicTrack(SceneManager.GetActiveScene().buildIndex);
 
     }
 
@@ -51,7 +48,7 @@ public class MusicManager : MonoBehaviour
         {
             if (audioSource.isPlaying && clip.name == audioSource.clip.name) 
             {
-                return; // if its the same song don't start playing it again. This is so title screen music transitions to first level without interruption. 
+                return;
             } 
 
             audioSource.clip = clip;
@@ -65,8 +62,7 @@ public class MusicManager : MonoBehaviour
         }
 
     }
-
-    // set by SetMusicVolume script which is on main menu canvas. 
+ 
 
     public void SetVolume(float newVolume)
     {

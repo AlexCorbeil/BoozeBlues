@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlatformPooler : MonoBehaviour
 {
-
-
-
     public GameObject pitStopPlatform;
     public GameObject endPlatform;
 
@@ -38,7 +35,6 @@ public class PlatformPooler : MonoBehaviour
             plat.transform.position = initPos;
         }
 
-        //There's gotta be a better way to write all this but whatever...
         //spawns a set of platforms for the level
         SpawnPlatforms();
 
@@ -81,22 +77,21 @@ public class PlatformPooler : MonoBehaviour
             //If the randompicker returns nothing (aka a pitstop), it'll skip it and try again
             if (currentPlatform != null)
             {
-                currentPlatform.SetActive(true); //Turns on the platforms
-                currentPlatform.transform.position += new Vector3(40 * platformIndex, 0, 0); //Makes sure the platforms don't stack on one another
-                lastPlatPos = currentPlatform.transform.position; //Stores the last platform's position
-                platformIndex++; //increases the platform index to make sure the next one is placed in the correct spot
+                currentPlatform.SetActive(true);
+                currentPlatform.transform.position += new Vector3(40 * platformIndex, 0, 0);
+                lastPlatPos = currentPlatform.transform.position;
+                platformIndex++;
             }
             else
             {
                 i--;
             }
         }
-        lastPlatPos += new Vector3(40, 0, 0); //Moves the position of the last platform to prevent platforms overlapping with the pitstop
+        lastPlatPos += new Vector3(40, 0, 0);
 
     }
 
     //Spawns a special platform (pitstop or endplatform) after the last platform
-
     void SpawnSpecialPlatform(Vector3 pos, GameObject plat)
     {
         GameObject specialPlat = Instantiate(plat, pos, Quaternion.identity) as GameObject;
@@ -105,8 +100,8 @@ public class PlatformPooler : MonoBehaviour
         platformIndex++;
     }
 
-    //Puts the platforms back in the pool
-    //Public function as it will be used in the Shredder script
+    /*Puts the platforms back in the pool
+    Public function as it will be used in the Shredder script*/
     public void AddPlatformBack(GameObject platform)
     {
         platforms.Add(platform);

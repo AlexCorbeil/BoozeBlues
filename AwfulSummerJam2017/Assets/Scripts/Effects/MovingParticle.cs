@@ -8,6 +8,6 @@ public class MovingParticle : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.Translate(Vector3.left * speed * Time.deltaTime); //Moves the platform left
+        transform.Translate(Vector3.left * speed * Time.deltaTime);
     }
 }

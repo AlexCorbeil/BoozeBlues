@@ -11,9 +11,6 @@ public class PickARandomBackgroundPanel : MonoBehaviour
     SpriteRenderer spriteRender;
     public Sprite[] panelArray; // assign background panels from Sprites\BG folder
 
-
-
-
     // Put this on platform pool for a level   
 
 

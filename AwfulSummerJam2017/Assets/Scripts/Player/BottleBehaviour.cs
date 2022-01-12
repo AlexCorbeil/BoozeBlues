@@ -5,7 +5,7 @@ using UnityEngine;
 public class BottleBehaviour : MonoBehaviour {
 
     public float speed;
-    private Rigidbody2D rb; //The bottle's rigidbody
+    private Rigidbody2D rb;
     private GameObject dustParticle;
 
     void Start()

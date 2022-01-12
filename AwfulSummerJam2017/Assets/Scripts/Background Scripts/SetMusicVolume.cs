@@ -7,16 +7,12 @@ public class SetMusicVolume : MonoBehaviour
 
     public Slider slider;
     MusicManager musicManager;
-    // Use this for initialization
+
     void Start()
     {
         musicManager = FindObjectOfType<MusicManager>();
         slider.value = musicManager.GetVolume();
     }
-
-    // Update is called once per frame
-
-
 
     void Update()
     {

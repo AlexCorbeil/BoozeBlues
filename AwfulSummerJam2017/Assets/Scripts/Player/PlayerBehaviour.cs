@@ -7,49 +7,45 @@ using UnityEngine.UI;
 public class PlayerBehaviour : MonoBehaviour
 {
     public float jumpForce;
-    public bool isGrounded; //public for testing purposes, change to private once done
-    public LayerMask whatIsGround; //Checks to see if the Layer is marked "ground"
-    public int initBottles = 24; //set to private once testing is over  //Starting Bottle count
-    public float initBoozeTimer = 5f; //set to private once testing is over  //Starting BoozeTimer
-    public int minBottleReq = 10; //The minimal bottle requirement for the pitstop
+    public LayerMask whatIsGround;
+    public int initBottles = 24;
+    public float initBoozeTimer = 5f;
+    public int minBottleReq = 10;
 
+    private bool isGrounded;
     private bool isWin = false;
-    private Vector3 initPos; //Starting or checkpoint Player Position
-    private float boozeTimer; //Current Booze Timer
-    private int bottles; //Current Bottle count
-    private Rigidbody2D rb; //The player's Rigidbody
-    [SerializeField] private CapsuleCollider2D runCollider; //The player's running collider
-    [SerializeField] private CapsuleCollider2D slideCollider; //the player's slide collider
-    private Animator anim; //The Player's animator
-    private bool gameStarted; //Is the game currently going?
-    private bool boozedUp; //Is the player currently in Booze Power mode?
-    private bool dead = false; //Well pretty self explanatory
+    private Vector3 initPos;
+    private float boozeTimer;
+    private int bottles;
+    private Rigidbody2D rb;
+    [SerializeField] private CapsuleCollider2D runCollider;
+    [SerializeField] private CapsuleCollider2D slideCollider;
+    private Animator anim;
+    private bool gameStarted; 
+    private bool boozedUp;
+    private bool isDead = false;
     private bool isSliding = false;
     private bool isPunching = false;
     private bool readyThrow = true;
     private bool gameEnd = false;
     private SFXManager sfxManager;
     private int jumpSFXNum;
-    private PlatformMover[] startPlatforms; //All the platforms currently in the scene
-    private EnemyBehaviour[] enemies; //All the enemies currently in the scene
+    private PlatformMover[] startPlatforms;
+    private EnemyBehaviour[] enemies;
     private BottlePickup[] bottleCollectibles;
     private LevelManager levelMng;
     private ScoreMaster scoreMaster;
-
-    //Bunch of variables I want to see in editor but not change
-
-
 
     [SerializeField]
     private GameObject bottleThrown;
     [SerializeField]
     private Transform throwingArm;
     [SerializeField]
-    private GameObject colRunning; //The running collider
+    private GameObject colRunning;
     [SerializeField]
-    private GameObject colSliding; //The sliding collider
+    private GameObject colSliding;
     [SerializeField]
-    private GameObject colBoozePower; //The booze power collider
+    private GameObject colBoozePower;
     [SerializeField]
     private GameObject colPunch;
     [SerializeField]
@@ -57,7 +53,7 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField]
     private CapsuleCollider2D colTriggerSlide;
     [SerializeField]
-    private Text bottleCountText; //The bottle count text............
+    private Text bottleCountText;
     [SerializeField]
     private GameObject startText;
     [SerializeField]
@@ -73,8 +69,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Start()
     {
-
-        //Yeh git those components
         rb = GetComponent<Rigidbody2D>();
         runCollider = colRunning.GetComponent<CapsuleCollider2D>();
         slideCollider = colSliding.GetComponent<CapsuleCollider2D>();
@@ -93,18 +87,16 @@ public class PlayerBehaviour : MonoBehaviour
         textPrompt.gameObject.SetActive(false);
         enemyActivation.SetActive(true);
 
-        //Initializes the timer, count and position (Should this be in the Initialize function? TBD)
         boozeTimer = initBoozeTimer;
         bottles = initBottles;
         initPos = transform.position;
 
-        UpdateBottleCountDisplay(); //Updates...the Bottle...Count...Display
-        Initialize(); //Resets animations to Idle and pauses the game until StartGame input
+        UpdateBottleCountDisplay();
+        Initialize();
     }
 
     void FixedUpdate()
     {
-        //What is ground????? This checks to see if the player is touching it!    
         if (!isSliding)
         {
             isGrounded = Physics2D.IsTouchingLayers(runCollider, whatIsGround);
@@ -114,45 +106,45 @@ public class PlayerBehaviour : MonoBehaviour
             isGrounded = Physics2D.IsTouchingLayers(slideCollider, whatIsGround);
         }
 
-        anim.SetBool("isGrounded", isGrounded); //Makes sure the animations go back to normal if the player touches the ground
+        anim.SetBool("isGrounded", isGrounded);
 
     }
 
     void Update()
     {
 
-        if (!gameStarted) //Checks to see if the game is set to "pause" mode
+        if (!gameStarted)
         {
             PauseGame();
-            if (Input.GetKeyDown(KeyCode.Space)) //Change keycode to something more appropriate once game is near completion
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 startText.SetActive(false);
-                StartRunning(); //Starts the game!
+                StartRunning();
             }
         }
-        else if (dead) //Checks to see if you died a horrible painful death
+        else if (isDead)
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                ResetEverything(); //Three guesses as to what this does
+                ResetEverything();
             }
         }
-        else if (!gameEnd)//This should be the default setting, when the game is running
+        else if (!gameEnd)
         {
-            Jump(); //Lets you soar through the air without a care in the world
-            Slide(); //Lets you slide real smooth like
-            ActivateBoozePower(); //Activates the wonderful magical power of BOOZE
+            Jump();
+            Slide();
+            ActivateBoozePower();
             Throw();
             Punch();
 
-            //The booze power timer
-            if (boozedUp) //Are you drunk?
+            
+            if (boozedUp)
             {
                 boozeTimer -= Time.deltaTime;
 
                 if (boozeTimer <= 0)
                 {
-                    DeactivateBoozePower(); //You are now sober/sad
+                    DeactivateBoozePower();
                 }
             }
 
@@ -267,14 +259,13 @@ public class PlayerBehaviour : MonoBehaviour
         enemyActivation.SetActive(false);
     }
 
-    //This happens when you touch a thing
     public void Dead()
     {
-        if (!dead)
+        if (!isDead)
         {
             anim.SetBool("isDead", true);
             PauseGame();
-            dead = true;
+            isDead = true;
             isSliding = false;
             DecreaseBottles();
         }
@@ -298,7 +289,6 @@ public class PlayerBehaviour : MonoBehaviour
         deathText.SetActive(true);
     }
 
-    //This is the function that puts the game in motion
     void StartRunning()
     {
         anim.SetBool("isIdle", false);
@@ -312,27 +302,25 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    //The allmighty collision detector, if you hit something, you are dead!
     void OnCollisionEnter2D(Collision2D col)
     {
         EnemyBehaviour enemy = col.gameObject.GetComponent<EnemyBehaviour>();
         ShooterBehaviour shooter = col.gameObject.GetComponent<ShooterBehaviour>();
         BulletBehaviour bullet = col.gameObject.GetComponent<BulletBehaviour>();
 
-        if (enemy || shooter || bullet) //Makes sure you don't die when you touch the ground
+        if (enemy || shooter || bullet)
         {
             Dead();
         }
     }
 
-    //The even more mighty trigger detector, if this hits something, a whole slew of things happen!
     void OnTriggerEnter2D(Collider2D collider)
     {
         EnemyBehaviour enemy = collider.gameObject.GetComponent<EnemyBehaviour>();
         ShooterBehaviour shooter = collider.gameObject.GetComponent<ShooterBehaviour>();
         BulletBehaviour bullet = collider.gameObject.GetComponent<BulletBehaviour>();
 
-        if ((enemy || bullet || shooter) && boozedUp) //Destroys ALL obstacles if you're boozed up
+        if ((enemy || bullet || shooter) && boozedUp)
         {
             if (enemy)
             {
@@ -347,20 +335,20 @@ public class PlayerBehaviour : MonoBehaviour
 
 
         }
-        else if (shooter && !boozedUp && isPunching) //Destroys only shooters when punching
+        else if (shooter && !boozedUp && isPunching)
         {
             shooter.DeathAnim();
             collider.gameObject.SetActive(false);
 
         }
 
-        if (collider.tag == "PitStop") //Sets the checkpoint if a pitstop is touched
+        if (collider.tag == "PitStop")
         {
             SetCheckPoint();
             CheckPointSFX();
         }
 
-        if (collider.tag == "Booze") //adds a Bottle of booze if you touch one
+        if (collider.tag == "Booze")
         {
             IncreaseBottles();
             PickupBottleSFX();
@@ -404,12 +392,8 @@ public class PlayerBehaviour : MonoBehaviour
         {
             bads.StopMoving();
         }
-
-        //TODO: Put the Iris transition here
-        //TODO: Call LevelManager to change the level
     }
 
-    //Drink up, be merry, and also invincible for a couple of seconds (pits don't care if you're drunk)
     void ActivateBoozePower()
     {
         if (Input.GetButtonDown("BoozeUp"))
@@ -430,7 +414,6 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    //You sober up real quick, and you lose your invincibility
     void DeactivateBoozePower()
     {
         boozedUp = false;
@@ -438,7 +421,6 @@ public class PlayerBehaviour : MonoBehaviour
         boozeTimer = initBoozeTimer;
     }
 
-    //Puts everything back where it was, all neat and tidy
     void ResetEverything()
     {
         foreach (PlatformMover plats in startPlatforms)
@@ -457,12 +439,11 @@ public class PlayerBehaviour : MonoBehaviour
             collBottles.gameObject.SetActive(true);
         }
 
-        dead = false;
+        isDead = false;
         deathText.SetActive(false);
         Initialize();
     }
 
-    //Changes the running collider to the slide collider, also makes you look real cool
     void Slide()
     {
         if (Input.GetButton("Slide"))
@@ -486,12 +467,10 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    //Gets you really high
     void Jump()
     {
         if (Input.GetButtonDown("Jump"))
         {
-            //You can't jump while you're already jumping, dummy!
             if (isGrounded)
             {
                 anim.SetTrigger("isJumping");
@@ -501,7 +480,6 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    //Increases your booze count
     void IncreaseBottles()
     {
 
@@ -510,7 +488,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    //Remove bottles when you're hit
     void DecreaseBottles()
     {
         if (bottles >= 5)
@@ -525,10 +502,9 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
-    //Throws a bottle
     void Throw()
     {
-        if (Input.GetButtonDown("Throw")) //Set to something better
+        if (Input.GetButtonDown("Throw"))
         {
             if (!isSliding && readyThrow)
             {
@@ -553,17 +529,15 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    //Punchs a human enemy (?)
     void Punch()
     {
-        if (Input.GetButtonDown("Punch")) //Set to something better
+        if (Input.GetButtonDown("Punch"))
         {
             anim.SetTrigger("isPunching");
             PunchSFX();
         }
     }
 
-    //Updates your booze count, white text if in normal range, green if above 24 and red if below...5?
     void UpdateBottleCountDisplay()
     {
         if (bottles <= minBottleReq)
@@ -601,7 +575,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     }
 
-    //Sets all the colliders, animations, positions and conditions for the player back to normal.
     void Initialize()
     {
         colRunning.SetActive(true);
@@ -613,7 +586,7 @@ public class PlayerBehaviour : MonoBehaviour
         gameStarted = false;
         gameEnd = false;
         boozedUp = false;
-        dead = false;
+        isDead = false;
         transform.position = initPos;
 
         anim.SetBool("isDead", false);
